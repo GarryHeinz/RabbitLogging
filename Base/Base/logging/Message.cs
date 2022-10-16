@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using Assembly;
 namespace Base.logging
 {
     /// <summary>
@@ -62,6 +63,7 @@ namespace Base.logging
         /// </summary>
         public void WriteToFile()
         {
+            Console.WriteLine($"Schreibe log nach: {System.IO.Directory.GetCurrentDirectory()}");
             string Path = this.GetPath();
             if (!File.Exists(Path))
             {
