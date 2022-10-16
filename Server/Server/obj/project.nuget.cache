@@ -1,0 +1,13 @@
+{
+  "version": 2,
+  "dgSpecHash": "FrydhRe196/VaiWoG4pEs6Y4trhIB2hUuCCY5n6ebmBHfjexBLOhZph5v1XLSwQGqx5NCY+lDxUnQiyx2DUjSw==",
+  "success": true,
+  "projectFilePath": "C:\\Users\\Henri\\Programme\\C#-Programme\\RabbitLogging\\Server\\Server\\Server.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\Henri\\.nuget\\packages\\rabbitmq.client\\6.4.0\\rabbitmq.client.6.4.0.nupkg.sha512",
+    "C:\\Users\\Henri\\.nuget\\packages\\system.memory\\4.5.4\\system.memory.4.5.4.nupkg.sha512",
+    "C:\\Users\\Henri\\.nuget\\packages\\system.threading.channels\\4.7.1\\system.threading.channels.4.7.1.nupkg.sha512",
+    "C:\\Users\\Henri\\.nuget\\packages\\microsoft.netcore.app.host.win-x64\\3.1.24\\microsoft.netcore.app.host.win-x64.3.1.24.nupkg.sha512"
+  ],
+  "logs": []
+}
