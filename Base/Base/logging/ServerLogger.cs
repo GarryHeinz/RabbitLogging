@@ -5,85 +5,69 @@ using System.Text;
 using System.IO;
 using System;
 
-namespace RabbitLogging.logging
+namespace Base.logging
 {
     public class ServerLogger
     {
 
-        static IConnection Connection;
-
-        static IModel Channel;
-
-        private static string HostName;
-
-        private static bool StructuresDeclared;
-
-        private static string QueueName;
-
-        public static string EXCHANGE_NAME { get; set; }
-
-        public static string EXCHANGE_TYPE { get; set; }
-
-        static ServerLogger()
-        {
-            EXCHANGE_NAME = "logging_router";
-            EXCHANGE_TYPE = "topic";
-        }
-
+        /// <summary>
+        /// Schnittstelle zur RabbitMQ
+        /// </summary>
+        private Connector Connector;
 
         /// <summary>
-        /// Verbindet sich mit dem Server.
-        /// Hier fallen ggf. Exceptions bei fehlerhafter Konfiguration an
+        /// Verwendeter HostName
         /// </summary>
-        public static void Connect(string HostName)
-        {
-            var factory = new ConnectionFactory() { HostName = HostName };
-            Connection = factory.CreateConnection();
-            Channel = Connection.CreateModel();
-            Console.WriteLine("Connected to Server");
-        }
+        private string HostName;
 
         /// <summary>
-        /// Stellt fest, ob die Verbindung noch hergestellt ist.
+        /// Name des verwendeten Exchanges
         /// </summary>
-        /// <returns> IS Connected</returns>
-        public static bool IsConnected()
+        private string ExchangeName;
+
+        /// <summary>
+        /// Verwendeter Exchangtyp
+        /// </summary>
+        private string ExchangeType;
+
+        /// <summary>
+        /// Name der Deklarierten Queue
+        /// </summary>
+        private string QueueName;
+
+        /// <summary>
+        /// Konstruktor
+        /// </summary>
+        /// <param name="HostName"> Hostname des RabbitMQ-Servers</param>
+        public ServerLogger(string HostName = "localhost")
         {
-            return Channel != null && Channel.IsOpen && Connection != null && Connection.IsOpen;
+            this.HostName = HostName;
+            this.QueueName = "";
+            this.Connector = new Connector(HostName);
         }
 
         /// <summary>
-        /// Trennt die Verbindung zum Server
+        /// Initialisiert den Logger
         /// </summary>
-        public static void Disconnect()
+        /// <param name="ExchangeName"> Name des Exchanges</param>
+        /// <param name="ExchangeType"> Typ des Exchanges</param>
+        /// <param name="RoutingKey"> Key auf den abonniert werden soll</param>
+        public void init(string ExchangeName = "logging_router", string ExchangeType = "topic",string RoutingKey = "#")
         {
-            if (Channel != null && Channel.IsOpen)
-            {
-                Channel.Close();
-            }
-            if (Connection != null && Connection.IsOpen)
-            {
-                Connection.Close();
-            }
-        }
-        public static void DeclareStructures()
-        {
-            Channel.ExchangeDeclare(exchange: EXCHANGE_NAME,
-                type: EXCHANGE_TYPE,
-                durable: true,
-                autoDelete: true);
-            QueueName = Channel.QueueDeclare(durable: false,
-                exclusive: false,
-                autoDelete: true).QueueName;
-            Channel.QueueBind(QueueName, EXCHANGE_NAME, "logs.*");
-            Console.WriteLine($"{EXCHANGE_NAME}, logs.*");
-            StructuresDeclared = true;
+            this.ExchangeName = ExchangeName;
+            this.ExchangeType = ExchangeType;
+            this.Connector.Connect();
+            this.Connector.DeclareExchange(this.ExchangeName, this.ExchangeType);
+            this.QueueName = this.Connector.BindQueueToExchange(this.ExchangeName, RoutingKey);
+            this.Consume();
         }
 
-        public static void Consume(bool ToConsole)
+        /// <summary>
+        /// Fügt den Eventhandler als Consumer hinzu
+        /// </summary>
+        private void Consume()
         {
-            var consumer = new EventingBasicConsumer(Channel);
-            consumer.Received += (model, ea) =>
+            EventHandler<BasicDeliverEventArgs> handler = (model, ea) =>
             {
                 string body = Encoding.UTF8.GetString(ea.Body.ToArray());
                 XmlSerializer Serializer = new XmlSerializer(typeof(Message));
@@ -94,13 +78,8 @@ namespace RabbitLogging.logging
                     throw new Exception("Message Null! No Content to be Parsed!");
                 }
                 m.WriteToFile();
-                if (ToConsole)
-                {
-                    Console.WriteLine(m.GetPath() + " -> " + m.GetContent());
-                }
             };
-            ServerLogger.Channel.BasicConsume(QueueName, true, consumer: consumer);
-            Console.WriteLine($"{QueueName}, {consumer.IsRunning}");
+            this.Connector.AddConsumer(this.QueueName,handler);
         }
 
     }

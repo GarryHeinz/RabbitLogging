@@ -111,11 +111,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\Henri\\Programme\\C#-Programme\\RabbitLogging\\Base\\Base\\Base.csproj",
+      "projectUniqueName": "C:\\Users\\Henri\\Programme\\C#\\RabbitLogging\\Base\\Base\\Base.csproj",
       "projectName": "Base",
-      "projectPath": "C:\\Users\\Henri\\Programme\\C#-Programme\\RabbitLogging\\Base\\Base\\Base.csproj",
+      "projectPath": "C:\\Users\\Henri\\Programme\\C#\\RabbitLogging\\Base\\Base\\Base.csproj",
       "packagesPath": "C:\\Users\\Henri\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\Henri\\Programme\\C#-Programme\\RabbitLogging\\Base\\Base\\obj\\",
+      "outputPath": "C:\\Users\\Henri\\Programme\\C#\\RabbitLogging\\Base\\Base\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\Henri\\AppData\\Roaming\\NuGet\\NuGet.Config",
@@ -164,7 +164,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.104\\RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.413\\RuntimeIdentifierGraph.json"
       }
     }
   }
